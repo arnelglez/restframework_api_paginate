@@ -58,22 +58,15 @@ class CustomPagination(PageNumberPagination):
 
 
 class MixinsList:
-    model = None
-    class_serializer = None
+    model = NoneclassSerializer = (
+        classSerializer
+        if classSerializer is not None
+        else create_generic_serializer(model)
+    )
     permission_get = None
     permission_post = None
 
-    def __init__(self, model, class_serializer, permission_get, permission_post):
-        self.model = model
-        self.classSerializer = (
-            class_serializer
-            if class_serializer is not None
-            else create_generic_serializer(model)
-        )
-        self.permissionGet = permission_get
-        self.permissionPost = permission_post
-
-    permission_classes = [self.permissionGet]
+    permission_classes = [permission_get]
 
     @extend_schema(
         parameters=[
@@ -120,7 +113,7 @@ class MixinsList:
             {"detail": "Invalid page."}, status=status.HTTP_404_NOT_FOUND
         )
 
-    permission_classes = [self.permissionPost]
+    permission_classes = [permission_post]
 
     @extend_schema(
         request=self.classSerializer,
@@ -160,40 +153,22 @@ class MixinsList:
 
 class MixinOperations:
     model = None
-    class_serializer = None
-    class_states_serializer = None
+    classSerializer = (
+        classSerializer
+        if classSerializer is not None
+        else create_generic_serializer(model)
+    )
+    classStateSerializer = (
+        classStateSerializer
+        if classStateSerializer is not None
+        else create_state_serializer(model)
+    )
     permission_get = None
     permission_post = None
     permission_put = None
     permission_delete = None
 
-    def __init__(
-        self,
-        model,
-        class_serializer,
-        class_state_serializer,
-        permission_get,
-        permission_post,
-        permission_put,
-        permission_delete,
-    ):
-        self.model = model
-        self.classSerializer = (
-            class_serializer
-            if class_Serializer is not None
-            else create_generic_serializer(model)
-        )
-        self.classStateSerializer = (
-            class_state_serializer
-            if class_state_serializer is not None
-            else create_state_serializer(model)
-        )
-        self.permissionGet = permission_get
-        self.permissionPost = permission_post
-        self.permissionPut = permission_put
-        self.permissionDelete = permission_delete
-
-    permission_classes = [self.permissionGet]
+    permission_classes = [permission_get]
 
     @extend_schema(
         request=self.classSerializer,
@@ -214,7 +189,7 @@ class MixinOperations:
         # show object
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
 
-    permission_classes = [self.permissionPost]
+    permission_classes = [permission_post]
 
     @extend_schema(
         request=self.classStateSerializer,
@@ -253,7 +228,7 @@ class MixinOperations:
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    permission_classes = [self.permissionPut]
+    permission_classes = [permission_put]
 
     @extend_schema(
         request=self.classSerializer,
@@ -294,7 +269,7 @@ class MixinOperations:
             serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST
         )
 
-    permission_classes = [self.permissionDelete]
+    permission_classes = [permission_delete]
 
     @extend_schema(
         request=self.classStateSerializer,
