@@ -61,9 +61,9 @@ class MixinsList:
     model = None
     image = None
     classSerializer = (
-        custom_serializer(modelClass=model, image_field=image)
+        custom_serializer(modelClass=model, image_field_name=image)
         if image is None
-        else custom_serializer(modelClass=model, image_field=image)
+        else custom_serializer(modelClass=model, image_field_name=image)
     )
     permission_get = None
     permission_post = None
@@ -159,8 +159,12 @@ class MixinsList:
 
 class MixinOperations:
     model = None
-    classSerializer = custom_serializer(model)
-    classSerializer = state_serializer(model)
+    classSerializer = (
+        custom_serializer(modelClass=model, image_field_name=image)
+        if image is None
+        else custom_serializer(modelClass=model, image_field_name=image)
+    )
+    classSerializer = state_serializer(modelClass=model)
     permission_get = None
     permission_post = None
     permission_put = None
