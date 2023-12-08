@@ -29,7 +29,7 @@ class CustomPagination(PageNumberPagination):
         # Check if a page number is provided in the request
         page_number = request.query_params.get(self.page_query_param)
 
-        if page_number is None:
+        if page_number is not None:
             # If no page number is provided, set the page_size to the total count
             self.page_size = queryset.count()
         else:
@@ -67,7 +67,7 @@ class MixinsList:
         self.model = model
         self.classSerializer = (
             classSerializer
-            if classSerializer is None
+            if classSerializer is not None
             else create_generic_serializer(model)
         )
         self.permission_get = permission_get
@@ -180,12 +180,12 @@ class MixinOperations:
         self.model = model
         self.classSerializer = (
             classSerializer
-            if classSerializer is None
+            if classSerializer is not None
             else create_generic_serializer(model)
         )
         self.classStateSerializer = (
             classStateSerializer
-            if classStateSerializer is None
+            if classStateSerializer is not None
             else create_state_serializer(model)
         )
         self.permission_get = permission_get
