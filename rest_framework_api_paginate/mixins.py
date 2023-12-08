@@ -58,11 +58,8 @@ class CustomPagination(PageNumberPagination):
 
 
 class MixinsList:
-    model = NoneclassSerializer = (
-        classSerializer
-        if classSerializer is not None
-        else create_generic_serializer(model)
-    )
+    model = None
+    classSerializer = create_generic_serializer(model)
     permission_get = None
     permission_post = None
 
@@ -153,16 +150,8 @@ class MixinsList:
 
 class MixinOperations:
     model = None
-    classSerializer = (
-        classSerializer
-        if classSerializer is not None
-        else create_generic_serializer(model)
-    )
-    classStateSerializer = (
-        classStateSerializer
-        if classStateSerializer is not None
-        else create_state_serializer(model)
-    )
+    classSerializer = create_generic_serializer(model)
+    classStateSerializer = create_state_serializer(model)
     permission_get = None
     permission_post = None
     permission_put = None
