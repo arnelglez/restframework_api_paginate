@@ -20,14 +20,14 @@ from .serializers import (
 
 
 # Create your views here.
-def list_view(model, permission_get=None, permission_post=None, has_image=False):
+def list_view(modelClass, permissionGet=None, permissionPost=None, has_image=False):
     class ListView(APIView, MixinsList):
-        model = model
+        model = modelClass
         classSerializer = (
             custom_image_serializer(model) if has_image else custom_serializer(model)
         )
-        permission_get = permission_get
-        permission_post = permission_post
+        permission_get = permissionGet
+        permission_post = permissionPost
 
         @extend_schema(
             parameters=[
