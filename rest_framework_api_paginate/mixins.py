@@ -183,7 +183,7 @@ class MixinOperations:
     def get_serializer_state_class(self):
         return self.classStateSerializer
 
-    mixins_list_instance = MixinsList()
+    mixins_list_instance = MixinOperations()
     serializer_class = mixins_list_instance.get_serializer_class()
     state_serializer_class = mixins_list_instance.get_serializer_state_class()
 
