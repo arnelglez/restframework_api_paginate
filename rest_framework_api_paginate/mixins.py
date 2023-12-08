@@ -159,6 +159,7 @@ class MixinsList:
 
 class MixinOperations:
     model = None
+    image = None
     classSerializer = (
         custom_serializer(modelClass=model, image_field_name=image)
         if image is None
