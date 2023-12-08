@@ -73,7 +73,7 @@ class MixinsList:
         self.permissionGet = permission_get
         self.permissionPost = permission_post
 
-    permission_classes = [permissionGet]
+    permission_classes = [self.permissionGet]
 
     @extend_schema(
         parameters=[
@@ -120,7 +120,7 @@ class MixinsList:
             {"detail": "Invalid page."}, status=status.HTTP_404_NOT_FOUND
         )
 
-    permission_classes = [permissionPost]
+    permission_classes = [self.permissionPost]
 
     @extend_schema(
         request=self.classSerializer,
@@ -193,7 +193,7 @@ class MixinOperations:
         self.permissionPut = permission_put
         self.permissionDelete = permission_delete
 
-    permission_classes = [permissionGet]
+    permission_classes = [self.permissionGet]
 
     @extend_schema(
         request=self.classSerializer,
@@ -214,7 +214,7 @@ class MixinOperations:
         # show object
         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
 
-    permission_classes = [permissionPost]
+    permission_classes = [self.permissionPost]
 
     @extend_schema(
         request=self.classStateSerializer,
@@ -253,7 +253,7 @@ class MixinOperations:
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    permission_classes = [permissionPut]
+    permission_classes = [self.permissionPut]
 
     @extend_schema(
         request=self.classSerializer,
@@ -294,7 +294,7 @@ class MixinOperations:
             serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST
         )
 
-    permission_classes = [permissionDelete]
+    permission_classes = [self.permissionDelete]
 
     @extend_schema(
         request=self.classStateSerializer,
