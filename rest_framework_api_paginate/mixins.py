@@ -59,9 +59,19 @@ class CustomPagination(PageNumberPagination):
 
 class MixinsList:
     model = None
-    classSerializer = create_generic_serializer(model)
+    classSerializer = None
     permission_get = None
     permission_post = None
+
+    def __init__(self, model, classSerializer, permission_get, permission_post):
+        self.model = model
+        self.classSerializer = (
+            classSerializer
+            if classSerializer is not None
+            else create_generic_serializer(self.model)
+        )
+        self.permission_get = permission_get
+        self.permission_post = permission_post
 
     permission_classes = [permission_get]
 
@@ -150,12 +160,38 @@ class MixinsList:
 
 class MixinOperations:
     model = None
-    classSerializer = create_generic_serializer(model)
-    classStateSerializer = create_state_serializer(model)
+    classSerializer = None
+    classStateSerializer = None
     permission_get = None
     permission_post = None
     permission_put = None
     permission_delete = None
+
+    def __init__(
+        self,
+        model,
+        classSerializer,
+        classStateSerializer,
+        permission_get,
+        permission_post,
+        permission_put,
+        permission_delete,
+    ):
+        self.model = model
+        self.classSerializer = (
+            classSerializer
+            if classSerializer is not None
+            else create_generic_serializer(self.model)
+        )
+        self.classStateSerializer = (
+            classStateSerializer
+            if classStateSerializer is not None
+            else create_state_serializer(self.model)
+        )
+        self.permission_get = permission_get
+        self.permission_post = permission_post
+        self.permission_put = permission_put
+        self.permission_delete = permission_delete
 
     permission_classes = [permission_get]
 
