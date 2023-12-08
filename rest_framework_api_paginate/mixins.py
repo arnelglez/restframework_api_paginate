@@ -5,10 +5,8 @@ from django.forms import ValidationError
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 
-
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from drf_spectacular.types import OpenApiTypes
-
 
 from .serializers import (
     create_generic_serializer,
@@ -18,6 +16,11 @@ from .serializers import (
     CustomResponseSerializer,
 )
 from django.db import models
+
+"""
+Created By Arnel Gonzalez Rodriguez 
+email: arnel.glez@gmail.com
+"""
 
 
 class CustomPagination(PageNumberPagination):
@@ -68,8 +71,8 @@ class MixinsList:
             self.classSerializer = create_generic_serializer(self.model)
         super().__init__(*args, **kwargs)
 
-    def get_serializer_class(self):
-        return self.classSerializer
+    def get_serializer_class(self, many=False):
+        return self.classSerializer(many=many)
 
     permission_classes = [permission_get]
 
@@ -86,7 +89,9 @@ class MixinsList:
             ),
         ],
         responses={
-            200: CustomResponseSerializer(result_serializer=get_serializer_class()),
+            200: CustomResponseSerializer(
+                result_serializer=get_serializer_class(many=true)
+            ),
             404: CustomErrorSerializer,
         },
     )
