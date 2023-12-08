@@ -60,7 +60,7 @@ class CustomPagination(PageNumberPagination):
 
 class MixinsList:
     model = None
-    classSerializer = None
+    classSerializer = custom_serializer(model)
     permission_get = None
     permission_post = None
 
