@@ -7,11 +7,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from django.db import models
 
-from .serializers import (
-    CustomErrorSerializer,
-    CustomSuccessSerializer,
-    CustomResponseSerializer,
-)
+from django.utils.translation import ugettext_lazy as _
 
 
 class CustomPagination(PageNumberPagination):
@@ -83,7 +79,7 @@ class MixinsList:
         elif total_count == 0:
             return paginator.get_paginated_response([], total_count)
         return JsonResponse(
-            {"detail": "Invalid page."}, status=status.HTTP_404_NOT_FOUND
+            {"detail": _("Invalid page.")}, status=status.HTTP_404_NOT_FOUND
         )
 
     permission_classes = [permission_post]
@@ -154,7 +150,7 @@ class MixinOperations:
             )
             # show errors because user is inactive
         return JsonResponse(
-            {"detail": f"This {self.model.__name__} is active"},
+            {"detail": _(f"This {self.model.__name__} is active")},
             safe=False,
             status=status.HTTP_400_BAD_REQUEST,
         )
@@ -211,7 +207,7 @@ class MixinOperations:
             )
             # show errors because user is inactive
         return JsonResponse(
-            {"detail": f"This {self.model.__name__} is inactive"},
+            {"detail": _(f"This {self.model.__name__} is inactive")},
             safe=False,
             status=status.HTTP_400_BAD_REQUEST,
         )
