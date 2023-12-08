@@ -74,6 +74,10 @@ class MixinsList:
     def get_serializer_class(self, many=False):
         return self.classSerializer(many=many)
 
+    mixins_list_instance = MixinsList()
+    serializer_class = mixins_list_instance.get_serializer_class()
+    many_serializer_class = mixins_list_instance.get_serializer_class(many=True)
+
     permission_classes = [permission_get]
 
     @extend_schema(
@@ -89,9 +93,7 @@ class MixinsList:
             ),
         ],
         responses={
-            200: CustomResponseSerializer(
-                result_serializer=get_serializer_class(many=True)
-            ),
+            200: CustomResponseSerializer(result_serializer=many_serializer_class),
             404: CustomErrorSerializer,
         },
     )
@@ -124,9 +126,9 @@ class MixinsList:
     permission_classes = [permission_post]
 
     @extend_schema(
-        request=get_serializer_class,
+        request=serializer_class,
         responses={
-            201: get_serializer_class,
+            201: serializer_class,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -181,12 +183,16 @@ class MixinOperations:
     def get_serializer_state_class(self):
         return self.classStateSerializer
 
+    mixins_list_instance = MixinsList()
+    serializer_class = mixins_list_instance.get_serializer_class()
+    state_serializer_class = mixins_list_instance.get_serializer_state_class()
+
     permission_classes = [permission_get]
 
     @extend_schema(
-        request=get_serializer_class,
+        request=serializer_class,
         responses={
-            200: get_serializer_class,
+            200: serializer_class,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -205,9 +211,9 @@ class MixinOperations:
     permission_classes = [permission_post]
 
     @extend_schema(
-        request=get_serializer_state_class,
+        request=state_serializer_class,
         responses={
-            202: get_serializer_state_class,
+            202: state_serializer_class,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -244,9 +250,9 @@ class MixinOperations:
     permission_classes = [permission_put]
 
     @extend_schema(
-        request=get_serializer_class,
+        request=serializer_class,
         responses={
-            202: get_serializer_class,
+            202: serializer_class,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -285,9 +291,9 @@ class MixinOperations:
     permission_classes = [permission_delete]
 
     @extend_schema(
-        request=get_serializer_state_class,
+        request=state_serializer_class,
         responses={
-            202: get_serializer_state_class,
+            202: state_serializer_class,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
