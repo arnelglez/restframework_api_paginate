@@ -2,34 +2,38 @@ from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
 
 
-class CustomSerializer:
-    model = None
+def custom_serializer(model):
+    class CustomSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = model
+            fields = "__all__"
+            read_only_fields = ["id", "is_active", "created_at", "updated_at"]
 
-    def __init__(self, *args, **kwargs):
-        self.model = kwargs.pop("model", None)
-        super().__init__(*args, **kwargs)
-
-    image = Base64ImageField(required=False)
-
-    class Meta:
-        model = self.model
-        fields = "__all__"
-        read_only_fields = ["id", "is_active", "created_at", "updated_at"]
+    return CustomSerializer
 
 
-class StateCustomSerializer:
-    model = None
+def custom_image_serializer(model, image_field_name="image"):
+    class CustomSerializer(serializers.ModelSerializer):
+        vars()[image_field_name] = CustomImageField(required=False, allow_null=True)
 
-    def __init__(self, *args, **kwargs):
-        self.model = kwargs.pop("model", None)
-        super().__init__(*args, **kwargs)
+        class Meta:
+            model = model
+            fields = "__all__"
+            read_only_fields = ["id", "is_active", "created_at", "updated_at"]
 
-    class Meta:
-        model = self.model
-        fields = "__all__"
-        read_only_fields = [
-            f.name for f in self.model._meta.fields if f.name != "is_active"
-        ]
+    return CustomSerializer
+
+
+def state_serializer(model):
+    class StateSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = model
+            fields = "__all__"
+            read_only_fields = [
+                f.name for f in model._meta.fields if f.name != "is_active"
+            ]
+
+    return StateSerializer
 
 
 class CustomErrorSerializer(serializers.Serializer):
