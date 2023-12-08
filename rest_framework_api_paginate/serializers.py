@@ -2,22 +2,22 @@ from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
 
 
-def custom_serializer(model):
+def custom_serializer(modelClass):
     class CustomSerializer(serializers.ModelSerializer):
         class Meta:
-            model = model
+            model = modelClass
             fields = "__all__"
             read_only_fields = ["id", "is_active", "created_at", "updated_at"]
 
     return CustomSerializer
 
 
-def custom_image_serializer(model, image_field_name="image"):
+def custom_image_serializer(modelClass, image_field_name="image"):
     class CustomSerializer(serializers.ModelSerializer):
         vars()[image_field_name] = CustomImageField(required=False, allow_null=True)
 
         class Meta:
-            model = model
+            model = modelClass
             fields = "__all__"
             read_only_fields = ["id", "is_active", "created_at", "updated_at"]
 
@@ -27,10 +27,10 @@ def custom_image_serializer(model, image_field_name="image"):
 def state_serializer(model):
     class StateSerializer(serializers.ModelSerializer):
         class Meta:
-            model = model
+            model = modelClass
             fields = "__all__"
             read_only_fields = [
-                f.name for f in model._meta.fields if f.name != "is_active"
+                f.name for f in modelClass._meta.fields if f.name != "is_active"
             ]
 
     return StateSerializer
