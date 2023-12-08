@@ -96,10 +96,12 @@ class MixinsList:
         """
         Mixin function to list every objects of any model
         """
+        # schema inicialization
         response_schema = (
             CustomResponseSerializer(result_serializer=self.classSerializer(many=True)),
         )
 
+        # function
         active = request.query_params.get("active", None)
 
         if active is not None:
@@ -124,9 +126,9 @@ class MixinsList:
     permission_classes = [permission_post]
 
     @extend_schema(
-        request=self.classSerializer,
+        request=None,
         responses={
-            201: self.classSerializer,
+            201: None,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -143,6 +145,11 @@ class MixinsList:
         """
         Mixin function to create object of any model
         """
+        # schema inicialization
+        request_schema = self.classSerializer
+        response_schema = self.classSerializer
+
+        # function
         # serializes data entry
         objSerializer = self.classSerializer(data=request.data)
         # verify if entry is valid
@@ -197,9 +204,9 @@ class MixinOperations:
     permission_classes = [permission_get]
 
     @extend_schema(
-        request=self.classSerializer,
+        request=None,
         responses={
-            200: self.classSerializer,
+            200: None,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -208,6 +215,12 @@ class MixinOperations:
         """
         Mixin function to show one objects of any model by his id
         """
+
+        # schema inicialization
+        request_schema = self.classSerializer
+        response_schema = self.classSerializer
+
+        # function
         # Search object by id
         obj = get_object_or_404(self.model, id=id)
         # serializes object
@@ -218,9 +231,9 @@ class MixinOperations:
     permission_classes = [permission_post]
 
     @extend_schema(
-        request=self.classStateSerializer,
+        request=None,
         responses={
-            202: CustomSuccessSerializer,
+            202: None,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -229,6 +242,11 @@ class MixinOperations:
         """
         Mixin function to active one objects of any model by his id
         """
+        # schema inicialization
+        request_schema = self.classStateSerializer
+        response_schema = self.classStateSerializer
+
+        # function
         obj = get_object_or_404(self.model, id=id)
         if not obj.is_active:
             # activating deleted user
@@ -257,9 +275,9 @@ class MixinOperations:
     permission_classes = [permission_put]
 
     @extend_schema(
-        request=self.classSerializer,
+        request=None,
         responses={
-            202: self.classSerializer,
+            202: None,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -276,6 +294,12 @@ class MixinOperations:
         """
         Mixin function to edit one objects of any model by his id
         """
+
+        # schema inicialization
+        request_schema = self.classSerializer
+        response_schema = self.classSerializer
+
+        # function
         # Search object by id
         obj = get_object_or_404(self.model, id=id)
 
@@ -298,9 +322,9 @@ class MixinOperations:
     permission_classes = [permission_delete]
 
     @extend_schema(
-        request=self.classStateSerializer,
+        request=None,
         responses={
-            202: self.classStateSerializer,
+            202: None,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -309,6 +333,12 @@ class MixinOperations:
         """
         Mixin function to delete one objects of any model by his id
         """
+
+        # schema inicialization
+        request_schema = self.classStateSerializer
+        response_schema = self.classStateSerializer
+
+        # function
         # Search object by id
         obj = get_object_or_404(self.model, id=id)
         if obj.is_active:
