@@ -155,8 +155,8 @@ class MixinsList:
 
 class MixinOperations:
     model = None
-    classSerializer = None
-    classStateSerializer = None
+    classSerializer = custom_serializer(model)
+    classSerializer = custom_state_serializer(model)
     permission_get = None
     permission_post = None
     permission_put = None
