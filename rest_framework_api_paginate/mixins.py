@@ -67,7 +67,7 @@ class MixinsList:
         self.model = model
         self.classSerializer = (
             classSerializer
-            if classSerializer == None
+            if classSerializer is not None
             else create_generic_serializer(model)
         )
         self.permission_get = permission_get
@@ -88,9 +88,7 @@ class MixinsList:
             ),
         ],
         responses={
-            200: CustomResponseSerializer(
-                result_serializer=self.classSerializer(many=True)
-            ),
+            200: None,
             404: CustomErrorSerializer,
         },
     )
@@ -98,6 +96,10 @@ class MixinsList:
         """
         Mixin function to list every objects of any model
         """
+        response_schema = (
+            CustomResponseSerializer(result_serializer=self.classSerializer(many=True)),
+        )
+
         active = request.query_params.get("active", None)
 
         if active is not None:
@@ -159,12 +161,8 @@ class MixinsList:
 
 class MixinOperations:
     model = None
-    classSerializer = (
-        classSerializer if classSerializer == None else create_generic_serializer(model)
-    )
-    classStateSerializer if classStateSerializer == None else create_state_serializer(
-        model
-    )
+    classSerializer = None
+    classStateSerializer = None
     permission_get = None
     permission_post = None
     permission_put = None
@@ -183,10 +181,14 @@ class MixinOperations:
         self.model = model
         self.classSerializer = (
             classSerializer
-            if classSerializer == None
+            if classSerializer is not None
             else create_generic_serializer(model)
         )
-        self.classStateSerializer = create_state_serializer(model)
+        self.classStateSerializer = (
+            classStateSerializer
+            if classStateSerializer is not None
+            else create_state_serializer(model)
+        )
         self.permission_get = permission_get
         self.permission_post = permission_post
         self.permission_put = permission_put
