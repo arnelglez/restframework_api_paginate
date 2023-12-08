@@ -2,6 +2,11 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.forms import ValidationError
 
+
+from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.types import OpenApiTypes
+
+
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 
@@ -53,6 +58,29 @@ class MixinsList:
 
     permission_classes = [permission_get]
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="page", description="Page number", required=False, type=int
+            ),
+            OpenApiParameter(
+                name="page_size",
+                description="Items per page",
+                required=False,
+                type=int,
+            ),
+            OpenApiParameter(
+                name="active",
+                description="Filter by active",
+                required=False,
+                type=bool,
+            ),
+        ],
+        responses={
+            200: CustomResponseSerializer(result_serializer=classSerializer(many=True)),
+            404: CustomErrorSerializer,
+        },
+    )
     def get(self, request, *args, **kwargs):
         """
         Mixin function to list every objects of any model
@@ -81,6 +109,22 @@ class MixinsList:
 
     permission_classes = [permission_post]
 
+    @extend_schema(
+        request=classSerializer,
+        responses={
+            201: classSerializer,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+        parameters=[
+            OpenApiParameter(
+                name="Authorization",
+                location=OpenApiParameter.HEADER,
+                description="Token used for authentication",
+                type=OpenApiTypes.STR,
+            )
+        ],
+    )
     def post(self, request):
         """
         Mixin function to create object of any model
