@@ -3,6 +3,8 @@ from drf_extra_fields.fields import Base64ImageField
 
 
 class CustomSerializer:
+    model = None
+
     def __init__(self, *args, **kwargs):
         self.model = kwargs.pop("model", None)
         super().__init__(*args, **kwargs)
@@ -16,6 +18,8 @@ class CustomSerializer:
 
 
 class StateCustomSerializer:
+    model = None
+
     def __init__(self, *args, **kwargs):
         self.model = kwargs.pop("model", None)
         super().__init__(*args, **kwargs)
