@@ -66,6 +66,8 @@ class MixinsList:
     permission_get = None
     permission_post = None
 
+    classSerializer = None
+
     def __init__(self, *args, **kwargs):
         if self.class_serializer is None:
             self.classSerializer = create_generic_serializer(self.model)
