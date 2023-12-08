@@ -16,7 +16,6 @@ from .serializers import (
     CustomSuccessSerializer,
     CustomResponseSerializer,
     custom_serializer,
-    custom_image_serializer,
     state_serializer,
 )
 
@@ -60,7 +59,12 @@ class CustomPagination(PageNumberPagination):
 
 class MixinsList:
     model = None
-    classSerializer = custom_serializer(model)
+    image = None
+    classSerializer = (
+        custom_serializer(modelClass=model, image_field=image)
+        if image is None
+        else custom_serializer(modelClass=model, image_field=image)
+    )
     permission_get = None
     permission_post = None
 
