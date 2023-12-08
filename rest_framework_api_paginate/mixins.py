@@ -62,26 +62,9 @@ class CustomPagination(PageNumberPagination):
 
 class MixinsList:
     model = None
-    class_serializer = None
+    classSerializer = None
     permission_get = None
     permission_post = None
-
-    classSerializer = None
-
-    def __init__(self, *args, **kwargs):
-        if self.class_serializer is None:
-            self.classSerializer = create_generic_serializer(self.model)
-        else:
-            self.classSerializer = self.class_serializer
-        super().__init__(*args, **kwargs)
-
-    def get_responses(self):
-        return {
-            200: CustomResponseSerializer(
-                result_serializer=self.classSerializer(many=True)
-            ),
-            404: CustomErrorSerializer,
-        }
 
     permission_classes = [permission_get]
 
@@ -97,7 +80,10 @@ class MixinsList:
                 name="active", description="Filter by active", required=False, type=bool
             ),
         ],
-        responses=get_responses,
+        responses={
+            200: CustomResponseSerializer(result_serializer=classSerializer(many=True)),
+            404: CustomErrorSerializer,
+        },
     )
     def get(self, request, *args, **kwargs):
         """
