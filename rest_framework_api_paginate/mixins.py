@@ -87,18 +87,19 @@ class MixinsList:
                 name="active", description="Filter by active", required=False, type=bool
             ),
         ],
-        responses={
-            200: None,
-            404: CustomErrorSerializer,
-        },
     )
     def get(self, request, *args, **kwargs):
         """
         Mixin function to list every objects of any model
         """
         # schema inicialization
-        response_schema = (
-            CustomResponseSerializer(result_serializer=self.classSerializer(many=True)),
+        responses = (
+            {
+                200: CustomResponseSerializer(
+                    result_serializer=self.classSerializer(many=True)
+                ),
+                404: CustomErrorSerializer,
+            },
         )
 
         # function
