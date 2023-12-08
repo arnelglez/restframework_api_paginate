@@ -49,7 +49,7 @@ def list_view(modelClass, permissionGet=None, permissionPost=None, has_image=Fal
             ],
             responses={
                 200: CustomResponseSerializer(
-                    result_serializer=self.classSerializer(many=True)
+                    result_serializer=classSerializer(many=True)
                 ),
                 404: CustomErrorSerializer,
             },
@@ -58,9 +58,9 @@ def list_view(modelClass, permissionGet=None, permissionPost=None, has_image=Fal
             return super().get(request, *args, **kwargs)
 
         @extend_schema(
-            request=self.classSerializer,
+            request=classSerializer,
             responses={
-                201: self.classSerializer,
+                201: classSerializer,
                 400: CustomErrorSerializer,
                 404: CustomErrorSerializer,
             },
