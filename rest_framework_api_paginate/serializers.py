@@ -21,7 +21,7 @@ def create_state_serializer(model_class):
         model = model_class
         fields = "__all__"
         read_only_fields = [
-            f.name for f in Contact._meta.fields if f.name != "is_active"
+            f.name for f in model_class._meta.fields if f.name != "is_active"
         ]
 
     serializer_class = type(
