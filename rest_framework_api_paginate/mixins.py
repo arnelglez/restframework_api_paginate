@@ -125,198 +125,197 @@ class MixinsList:
             {"detail": "Invalid page."}, status=status.HTTP_404_NOT_FOUND
         )
 
-    # permission_classes = [permission_post]
+    permission_classes = [permission_post]
 
-    # @extend_schema(
-    #     request=self.get_serializer_class,
-    #     responses={
-    #         201: self.get_serializer_class,
-    #         400: CustomErrorSerializer,
-    #         404: CustomErrorSerializer,
-    #     },
-    #     parameters=[
-    #         OpenApiParameter(
-    #             name="Authorization",
-    #             location=OpenApiParameter.HEADER,
-    #             description="Token used for authentication",
-    #             type=OpenApiTypes.STR,
-    #         )
-    #     ],
-    # )
-    # def post(self, request):
-    #     """
-    #     Mixin function to create object of any model
-    #     """
-    #     # serializes data entry
-    #     objSerializer = self.classSerializer(data=request.data)
-    #     # verify if entry is valid
-    #     if objSerializer.is_valid():
-    #         # save entry
-    #         objSerializer.save()
-    #         # show object saved
-    #         return JsonResponse(
-    #             objSerializer.data, safe=False, status=status.HTTP_201_CREATED
-    #         )
-    #     # show errors because not save
-    #     return JsonResponse(
-    #         objSerializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST
-    #     )
-
-
-# class MixinOperations:
-#     model = None
-#     classSerializer = None
-#     classStateSerializer = None
-#     permission_get = None
-#     permission_post = None
-#     permission_put = None
-#     permission_delete = None
-
-#     def __init__(self, *args, **kwargs):
-#         if self.classSerializer is None:
-#             self.classSerializer = create_generic_serializer(self.model)
-#         if self.classStateSerializer is None:
-#             self.classStateSerializer = create_state_serializer(self.model)
-#         super().__init__(*args, **kwargs)
+    @extend_schema(
+        request=self.get_serializer_class,
+        responses={
+            201: self.get_serializer_class,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+        parameters=[
+            OpenApiParameter(
+                name="Authorization",
+                location=OpenApiParameter.HEADER,
+                description="Token used for authentication",
+                type=OpenApiTypes.STR,
+            )
+        ],
+    )
+    def post(self, request):
+        """
+        Mixin function to create object of any model
+        """
+        # serializes data entry
+        objSerializer = self.classSerializer(data=request.data)
+        # verify if entry is valid
+        if objSerializer.is_valid():
+            # save entry
+            objSerializer.save()
+            # show object saved
+            return JsonResponse(
+                objSerializer.data, safe=False, status=status.HTTP_201_CREATED
+            )
+        # show errors because not save
+        return JsonResponse(
+            objSerializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST
+        )
 
 
-#     permission_classes = [permission_get]
+class MixinOperations:
+    model = None
+    classSerializer = None
+    classStateSerializer = None
+    permission_get = None
+    permission_post = None
+    permission_put = None
+    permission_delete = None
 
-#     @extend_schema(
-#         request=self.get_serializer_class,
-#         responses={
-#             200: self.get_serializer_class,
-#             400: CustomErrorSerializer,
-#             404: CustomErrorSerializer,
-#         },
-#     )
-#     def get(self, request, id):
-#         """
-#         Mixin function to show one objects of any model by his id
-#         """
-#         # Search object by id
-#         obj = get_object_or_404(self.model, id=id)
-#         # serializes object
-#         serializer = self.classSerializer(obj, many=False)
-#         # show object
-#         return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+    def __init__(self, *args, **kwargs):
+        if self.classSerializer is None:
+            self.classSerializer = create_generic_serializer(self.model)
+        if self.classStateSerializer is None:
+            self.classStateSerializer = create_state_serializer(self.model)
+        super().__init__(*args, **kwargs)
 
-#     permission_classes = [permission_post]
+    permission_classes = [permission_get]
 
-#     @extend_schema(
-#         request=self.get_serializer_state_class,
-#         responses={
-#             202: self.get_serializer_state_class,
-#             400: CustomErrorSerializer,
-#             404: CustomErrorSerializer,
-#         },
-#     )
-#     def post(self, request, id):
-#         """
-#         Mixin function to active one objects of any model by his id
-#         """
-#         obj = get_object_or_404(self.model, id=id)
-#         if not obj.is_active:
-#             # activating deleted user
-#             objActive = {"is_active": 1}
-#             # serializes data entry
-#             serializer = self.classStateSerializer(obj, data=objActive)
-#             # verify if entry is valid
-#             if serializer.is_valid():
-#                 # save entry
-#                 serializer.save()
-#                 # show blank object (deleted)
-#                 return JsonResponse(
-#                     serializer.data, safe=False, status=status.HTTP_202_ACCEPTED
-#                 )
-#             # show errors because not save
-#             return JsonResponse(
-#                 serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST
-#             )
-#             # show errors because user is inactive
-#         return JsonResponse(
-#             {"detail": f"This {self.model.__name__} is active"},
-#             safe=False,
-#             status=status.HTTP_400_BAD_REQUEST,
-#         )
+    @extend_schema(
+        request=self.get_serializer_class,
+        responses={
+            200: self.get_serializer_class,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+    )
+    def get(self, request, id):
+        """
+        Mixin function to show one objects of any model by his id
+        """
+        # Search object by id
+        obj = get_object_or_404(self.model, id=id)
+        # serializes object
+        serializer = self.classSerializer(obj, many=False)
+        # show object
+        return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
 
-#     permission_classes = [permission_put]
+    permission_classes = [permission_post]
 
-#     @extend_schema(
-#         request=self.get_serializer_class,
-#         responses={
-#             202: self.get_serializer_class,
-#             400: CustomErrorSerializer,
-#             404: CustomErrorSerializer,
-#         },
-#         parameters=[
-#             OpenApiParameter(
-#                 name="Authorization",
-#                 location=OpenApiParameter.HEADER,
-#                 description="Token used for authentication",
-#                 type=OpenApiTypes.STR,
-#             )
-#         ],
-#     )
-#     def put(self, request, id):
-#         """
-#         Mixin function to edit one objects of any model by his id
-#         """
-#         # Search object by id
-#         obj = get_object_or_404(self.model, id=id)
+    @extend_schema(
+        request=self.get_serializer_state_class,
+        responses={
+            202: self.get_serializer_state_class,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+    )
+    def post(self, request, id):
+        """
+        Mixin function to active one objects of any model by his id
+        """
+        obj = get_object_or_404(self.model, id=id)
+        if not obj.is_active:
+            # activating deleted user
+            objActive = {"is_active": 1}
+            # serializes data entry
+            serializer = self.classStateSerializer(obj, data=objActive)
+            # verify if entry is valid
+            if serializer.is_valid():
+                # save entry
+                serializer.save()
+                # show blank object (deleted)
+                return JsonResponse(
+                    serializer.data, safe=False, status=status.HTTP_202_ACCEPTED
+                )
+            # show errors because not save
+            return JsonResponse(
+                serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST
+            )
+            # show errors because user is inactive
+        return JsonResponse(
+            {"detail": f"This {self.model.__name__} is active"},
+            safe=False,
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
-#         # serializes data entry
-#         serializer = self.classSerializer(obj, data=request.data)
+    permission_classes = [permission_put]
 
-#         # verify if entry is valid
-#         if serializer.is_valid():
-#             # save entry
-#             serializer.save()
-#             # show object updated
-#             return JsonResponse(
-#                 serializer.data, safe=False, status=status.HTTP_202_ACCEPTED
-#             )
-#         # show errors because not save
-#         return JsonResponse(
-#             serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST
-#         )
+    @extend_schema(
+        request=self.get_serializer_class,
+        responses={
+            202: self.get_serializer_class,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+        parameters=[
+            OpenApiParameter(
+                name="Authorization",
+                location=OpenApiParameter.HEADER,
+                description="Token used for authentication",
+                type=OpenApiTypes.STR,
+            )
+        ],
+    )
+    def put(self, request, id):
+        """
+        Mixin function to edit one objects of any model by his id
+        """
+        # Search object by id
+        obj = get_object_or_404(self.model, id=id)
 
-#     permission_classes = [permission_delete]
+        # serializes data entry
+        serializer = self.classSerializer(obj, data=request.data)
 
-#     @extend_schema(
-#         request=self.get_serializer_state_class,
-#         responses={
-#             202: self.get_serializer_state_class,
-#             400: CustomErrorSerializer,
-#             404: CustomErrorSerializer,
-#         },
-#     )
-#     def delete(self, request, id):
-#         """
-#         Mixin function to delete one objects of any model by his id
-#         """
-#         # Search object by id
-#         obj = get_object_or_404(self.model, id=id)
-#         if obj.is_active:
-#             # user can be deleted only status inactive
-#             objDelete = {"is_active": 0}
-#             # serializes data entry
-#             serializer = self.classStateSerializer(obj, data=objDelete)
-#             # verify if entry is valid
-#             if serializer.is_valid():
-#                 # save entry
-#                 serializer.save()
-#                 # show blank object (deleted)
-#                 return JsonResponse(
-#                     serializer.data, safe=False, status=status.HTTP_202_ACCEPTED
-#                 )
-#             # show errors because not save
-#             return JsonResponse(
-#                 serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST
-#             )
-#             # show errors because user is inactive
-#         return JsonResponse(
-#             {"detail": f"This {self.model.__name__} is inactive"},
-#             safe=False,
-#             status=status.HTTP_400_BAD_REQUEST,
-#         )
+        # verify if entry is valid
+        if serializer.is_valid():
+            # save entry
+            serializer.save()
+            # show object updated
+            return JsonResponse(
+                serializer.data, safe=False, status=status.HTTP_202_ACCEPTED
+            )
+        # show errors because not save
+        return JsonResponse(
+            serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST
+        )
+
+    permission_classes = [permission_delete]
+
+    @extend_schema(
+        request=self.get_serializer_state_class,
+        responses={
+            202: self.get_serializer_state_class,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+    )
+    def delete(self, request, id):
+        """
+        Mixin function to delete one objects of any model by his id
+        """
+        # Search object by id
+        obj = get_object_or_404(self.model, id=id)
+        if obj.is_active:
+            # user can be deleted only status inactive
+            objDelete = {"is_active": 0}
+            # serializes data entry
+            serializer = self.classStateSerializer(obj, data=objDelete)
+            # verify if entry is valid
+            if serializer.is_valid():
+                # save entry
+                serializer.save()
+                # show blank object (deleted)
+                return JsonResponse(
+                    serializer.data, safe=False, status=status.HTTP_202_ACCEPTED
+                )
+            # show errors because not save
+            return JsonResponse(
+                serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST
+            )
+            # show errors because user is inactive
+        return JsonResponse(
+            {"detail": f"This {self.model.__name__} is inactive"},
+            safe=False,
+            status=status.HTTP_400_BAD_REQUEST,
+        )
