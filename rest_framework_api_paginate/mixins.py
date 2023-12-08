@@ -74,9 +74,9 @@ class MixinsList:
     def get_serializer_class(self, many=False):
         return self.classSerializer(many=many)
 
-    mixins_list_instance = MixinsList()
-    serializer_class = mixins_list_instance.get_serializer_class()
-    many_serializer_class = mixins_list_instance.get_serializer_class(many=True)
+    instance = super()
+    serializer_class = instance.get_serializer_class()
+    many_serializer_class = instance.get_serializer_class(many=True)
 
     permission_classes = [permission_get]
 
@@ -183,9 +183,9 @@ class MixinOperations:
     def get_serializer_state_class(self):
         return self.classStateSerializer
 
-    mixins_list_instance = MixinOperations()
-    serializer_class = mixins_list_instance.get_serializer_class()
-    state_serializer_class = mixins_list_instance.get_serializer_state_class()
+    instance = super()
+    serializer_class = instance.get_serializer_class()
+    state_serializer_class = instance.get_serializer_state_class()
 
     permission_classes = [permission_get]
 
