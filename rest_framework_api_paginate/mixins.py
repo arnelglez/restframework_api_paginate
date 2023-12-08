@@ -2,9 +2,18 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.forms import ValidationError
 
-
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
+
+
+from drf_spectacular.utils import (
+    OpenApiParameter,
+    extend_schema,
+    CustomErrorSerializer,
+    CustomSuccessSerializer,
+    CustomResponseSerializer,
+)
+from drf_spectacular.types import OpenApiTypes
 
 from .serializers import create_generic_serializer, create_state_serializer
 
@@ -50,12 +59,41 @@ class CustomPagination(PageNumberPagination):
 
 class MixinsList:
     model = None
-    classSerializer = create_generic_serializer(model)
+    classSerializer = None
     permission_get = None
     permission_post = None
 
+    def __init__(self, model, classSerializer, permission_get, permission_post):
+        self.model = model
+        self.classSerializer = (
+            classSerializer
+            if classSerializer == None
+            else create_generic_serializer(model)
+        )
+        self.permission_get = permission_get
+        self.permission_post = permission_post
+
     permission_classes = [permission_get]
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="page", description="Page number", required=False, type=int
+            ),
+            OpenApiParameter(
+                name="page_size", description="Items per page", required=False, type=int
+            ),
+            OpenApiParameter(
+                name="active", description="Filter by active", required=False, type=bool
+            ),
+        ],
+        responses={
+            200: CustomResponseSerializer(
+                result_serializer=self.classSerializer(many=True)
+            ),
+            404: CustomErrorSerializer,
+        },
+    )
     def get(self, request, *args, **kwargs):
         """
         Mixin function to list every objects of any model
@@ -83,6 +121,22 @@ class MixinsList:
 
     permission_classes = [permission_post]
 
+    @extend_schema(
+        request=self.classSerializer,
+        responses={
+            201: self.classSerializer,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+        parameters=[
+            OpenApiParameter(
+                name="Authorization",
+                location=OpenApiParameter.HEADER,
+                description="Token used for authentication",
+                type=OpenApiTypes.STR,
+            )
+        ],
+    )
     def post(self, request):
         """
         Mixin function to create object of any model
@@ -105,15 +159,49 @@ class MixinsList:
 
 class MixinOperations:
     model = None
-    classSerializer = create_generic_serializer(model)
-    classStateSerializer = create_state_serializer(model)
+    classSerializer = (
+        classSerializer if classSerializer == None else create_generic_serializer(model)
+    )
+    classStateSerializer if classStateSerializer == None else create_state_serializer(
+        model
+    )
     permission_get = None
     permission_post = None
     permission_put = None
     permission_delete = None
 
+    def __init__(
+        self,
+        model,
+        classSerializer,
+        classStateSerializer,
+        permission_get,
+        permission_post,
+        permission_put,
+        permission_delete,
+    ):
+        self.model = model
+        self.classSerializer = (
+            classSerializer
+            if classSerializer == None
+            else create_generic_serializer(model)
+        )
+        self.classStateSerializer = create_state_serializer(model)
+        self.permission_get = permission_get
+        self.permission_post = permission_post
+        self.permission_put = permission_put
+        self.permission_delete = permission_delete
+
     permission_classes = [permission_get]
 
+    @extend_schema(
+        request=self.classSerializer,
+        responses={
+            200: self.classSerializer,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+    )
     def get(self, request, id):
         """
         Mixin function to show one objects of any model by his id
@@ -127,6 +215,14 @@ class MixinOperations:
 
     permission_classes = [permission_post]
 
+    @extend_schema(
+        request=self.classStateSerializer,
+        responses={
+            202: CustomSuccessSerializer,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+    )
     def post(self, request, id):
         """
         Mixin function to active one objects of any model by his id
@@ -158,6 +254,22 @@ class MixinOperations:
 
     permission_classes = [permission_put]
 
+    @extend_schema(
+        request=self.classSerializer,
+        responses={
+            202: self.classSerializer,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+        parameters=[
+            OpenApiParameter(
+                name="Authorization",
+                location=OpenApiParameter.HEADER,
+                description="Token used for authentication",
+                type=OpenApiTypes.STR,
+            )
+        ],
+    )
     def put(self, request, id):
         """
         Mixin function to edit one objects of any model by his id
@@ -183,6 +295,14 @@ class MixinOperations:
 
     permission_classes = [permission_delete]
 
+    @extend_schema(
+        request=self.classStateSerializer,
+        responses={
+            202: self.classStateSerializer,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+    )
     def delete(self, request, id):
         """
         Mixin function to delete one objects of any model by his id

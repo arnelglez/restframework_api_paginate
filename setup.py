@@ -14,10 +14,19 @@ setup(
     install_requires=[
         "Django>=3.0",
         "djangorestframework>=3.11",
+        "drf-spectacular>=0.17.2",
     ],
     classifiers=[
-        "Framework :: Django",
-        "Programming Language :: Python :: 3",
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Framework :: Django",
+        "Framework :: Django :: 3.0",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
+    python_requires=">=3.7",
 )
