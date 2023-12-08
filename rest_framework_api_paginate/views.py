@@ -9,7 +9,6 @@ from drf_spectacular.utils import OpenApiParameter, extend_schema
 from drf_spectacular.types import OpenApiTypes
 
 from .mixins import MixinsList, MixinOperations
-from .serializers import AttributeSerializer, StateAttributeSerializer
 from .serializers import (
     CustomErrorSerializer,
     CustomSuccessSerializer,
