@@ -9,10 +9,6 @@ from django.db import models
 
 from django.utils.translation import gettext_lazy as _
 
-from .swagger import (
-    common_get_many_schema,
-)
-
 
 class CustomPagination(PageNumberPagination):
     page_size = 25
