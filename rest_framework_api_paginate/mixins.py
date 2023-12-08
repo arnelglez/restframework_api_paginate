@@ -90,7 +90,7 @@ class MixinsList:
         ],
         responses={
             200: CustomResponseSerializer(
-                result_serializer=get_serializer_class(many=true)
+                result_serializer=get_serializer_class(many=True)
             ),
             404: CustomErrorSerializer,
         },
