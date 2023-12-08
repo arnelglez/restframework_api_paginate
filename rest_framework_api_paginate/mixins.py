@@ -75,6 +75,14 @@ class MixinsList:
             self.classSerializer = self.class_serializer
         super().__init__(*args, **kwargs)
 
+    def get_responses(self):
+        return {
+            200: CustomResponseSerializer(
+                result_serializer=self.classSerializer(many=True)
+            ),
+            404: CustomErrorSerializer,
+        }
+
     permission_classes = [permission_get]
 
     @extend_schema(
@@ -89,10 +97,7 @@ class MixinsList:
                 name="active", description="Filter by active", required=False, type=bool
             ),
         ],
-        responses={
-            200: CustomResponseSerializer(result_serializer=classSerializer(many=True)),
-            404: CustomErrorSerializer,
-        },
+        responses=get_responses,
     )
     def get(self, request, *args, **kwargs):
         """
