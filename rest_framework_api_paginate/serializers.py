@@ -2,7 +2,7 @@ from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
 
 
-def custom_serializer(modelClass, image_field_name):
+def custom_serializer(modelClass, image_field_name=None):
     class CustomSerializer(serializers.ModelSerializer):
         if image_field_name:
             vars()[image_field_name] = CustomImageField(required=False, allow_null=True)

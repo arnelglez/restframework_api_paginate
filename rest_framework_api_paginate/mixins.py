@@ -57,10 +57,10 @@ class CustomPagination(PageNumberPagination):
 
 class MixinsList:
     model = None
-    image = None
     classSerializer = None
     permission_get = None
     permission_post = None
+    responses = None
 
     permission_classes = [permission_get]
 
@@ -82,10 +82,7 @@ class MixinsList:
                 type=bool,
             ),
         ],
-        responses={
-            200: CustomResponseSerializer(result_serializer=classSerializer(many=True)),
-            404: CustomErrorSerializer,
-        },
+        responses=responses,
     )
     def get(self, request, *args, **kwargs):
         """
@@ -153,7 +150,6 @@ class MixinsList:
 
 class MixinOperations:
     model = None
-    image = None
     classSerializer = None
     classStateSerializer = None
     permission_get = None
