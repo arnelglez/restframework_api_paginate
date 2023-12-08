@@ -6,17 +6,17 @@ from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 
 
-from drf_spectacular.utils import (
-    OpenApiParameter,
-    extend_schema,
+from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.types import OpenApiTypes
+
+
+from .serializers import (
+    create_generic_serializer,
+    create_state_serializer,
     CustomErrorSerializer,
     CustomSuccessSerializer,
     CustomResponseSerializer,
 )
-from drf_spectacular.types import OpenApiTypes
-
-from .serializers import create_generic_serializer, create_state_serializer
-
 from django.db import models
 
 
