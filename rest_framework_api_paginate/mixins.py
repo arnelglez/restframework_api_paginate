@@ -88,9 +88,7 @@ class MixinsList:
             ),
         ],
         responses={
-            200: CustomResponseSerializer(
-                result_serializer=self.classSerializer(many=True)
-            ),
+            200: CustomResponseSerializer(result_serializer=classSerializer(many=True)),
             404: CustomErrorSerializer,
         },
     )
@@ -123,9 +121,9 @@ class MixinsList:
     permission_classes = [permission_post]
 
     @extend_schema(
-        request=self.classSerializer,
+        request=classSerializer,
         responses={
-            201: self.classSerializer,
+            201: classSerializer,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
