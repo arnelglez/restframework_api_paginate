@@ -165,7 +165,7 @@ class MixinOperations:
         if image is None
         else custom_serializer(modelClass=model, image_field_name=image)
     )
-    classSerializer = state_serializer(modelClass=model)
+    classStateSerializer = state_serializer(modelClass=model)
     permission_get = None
     permission_post = None
     permission_put = None
