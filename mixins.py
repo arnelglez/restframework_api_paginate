@@ -6,10 +6,9 @@ from django.forms import ValidationError
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 
+from .serializers import create_generic_serializer, create_state_serializer
+
 from django.db import models
-from PIL import Image as PImage
-from io import BytesIO
-from django.core.files.base import ContentFile
 
 
 class CustomPagination(PageNumberPagination):
@@ -51,7 +50,7 @@ class CustomPagination(PageNumberPagination):
 
 class MixinsList:
     model = None
-    classSerializer = None
+    classSerializer = create_generic_serializer(model)
     permission_get = None
     permission_post = None
 
@@ -106,8 +105,8 @@ class MixinsList:
 
 class MixinOperations:
     model = None
-    classSerializer = None
-    classStateSerializer = None
+    classSerializer = create_generic_serializer(model)
+    classStateSerializer = create_state_serializer(model)
     permission_get = None
     permission_post = None
     permission_put = None
