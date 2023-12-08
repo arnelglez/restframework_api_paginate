@@ -16,15 +16,17 @@ def custom_serializer(modelClass, image_field_name):
 
 
 def state_serializer(modelClass):
-    class StateSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = modelClass
-            fields = "__all__"
-            read_only_fields = [
-                f.name for f in modelClass._meta.fields if f.name != "is_active"
-            ]
+    if modelClass is not None:
 
-    return StateSerializer
+        class StateSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = modelClass
+                fields = "__all__"
+                read_only_fields = [
+                    f.name for f in modelClass._meta.fields if f.name != "is_active"
+                ]
+
+        return StateSerializer
 
 
 class CustomErrorSerializer(serializers.Serializer):

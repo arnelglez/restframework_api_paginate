@@ -23,6 +23,7 @@ INSTALLED_APPS = [
 ```bash
 from rest_framework_api_paginate import CustomPagination, MixinsList, MixinOperations
 
+
 class Operations(MixinOperations, APIView):
     model = ModelName
     classSerializer = None
