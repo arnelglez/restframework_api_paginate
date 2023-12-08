@@ -76,7 +76,7 @@ def list_view(modelClass, permissionGet=None, permissionPost=None, has_image=Fal
         def post(self, request):
             return super().post(request)
 
-    return ListView
+    return ListView.as_view()
 
 
 # class AttributeOperations(APIView, MixinOperations):
