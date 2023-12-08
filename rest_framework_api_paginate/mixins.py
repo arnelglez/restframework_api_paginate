@@ -9,6 +9,10 @@ from django.db import models
 
 from django.utils.translation import gettext_lazy as _
 
+from .swagger import (
+    common_get_many_schema,
+)
+
 
 class CustomPagination(PageNumberPagination):
     page_size = 25
@@ -56,6 +60,7 @@ class MixinsList:
 
     permission_classes = [permission_get]
 
+    @common_get_many_schema(modelClass=model)
     def get(self, request, *args, **kwargs):
         """
         Mixin function to list every objects of any model
