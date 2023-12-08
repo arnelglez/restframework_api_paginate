@@ -67,7 +67,7 @@ class MixinsList:
         self.model = model
         self.classSerializer = (
             classSerializer
-            if classSerializer is not None
+            if classSerializer is None
             else create_generic_serializer(model)
         )
         self.permission_get = permission_get
@@ -87,22 +87,18 @@ class MixinsList:
                 name="active", description="Filter by active", required=False, type=bool
             ),
         ],
+        responses={
+            200: CustomResponseSerializer(
+                result_serializer=self.classSerializer(many=True)
+            ),
+            404: CustomErrorSerializer,
+        },
     )
     def get(self, request, *args, **kwargs):
         """
         Mixin function to list every objects of any model
         """
-        # schema inicialization
-        responses = (
-            {
-                200: CustomResponseSerializer(
-                    result_serializer=self.classSerializer(many=True)
-                ),
-                404: CustomErrorSerializer,
-            },
-        )
 
-        # function
         active = request.query_params.get("active", None)
 
         if active is not None:
@@ -127,9 +123,9 @@ class MixinsList:
     permission_classes = [permission_post]
 
     @extend_schema(
-        request=None,
+        request=self.classSerializer,
         responses={
-            201: None,
+            201: self.classSerializer,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -146,11 +142,6 @@ class MixinsList:
         """
         Mixin function to create object of any model
         """
-        # schema inicialization
-        request_schema = self.classSerializer
-        response_schema = self.classSerializer
-
-        # function
         # serializes data entry
         objSerializer = self.classSerializer(data=request.data)
         # verify if entry is valid
@@ -189,12 +180,12 @@ class MixinOperations:
         self.model = model
         self.classSerializer = (
             classSerializer
-            if classSerializer is not None
+            if classSerializer is None
             else create_generic_serializer(model)
         )
         self.classStateSerializer = (
             classStateSerializer
-            if classStateSerializer is not None
+            if classStateSerializer is None
             else create_state_serializer(model)
         )
         self.permission_get = permission_get
@@ -205,9 +196,9 @@ class MixinOperations:
     permission_classes = [permission_get]
 
     @extend_schema(
-        request=None,
+        request=self.classSerializer,
         responses={
-            200: None,
+            200: self.classSerializer,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -216,12 +207,6 @@ class MixinOperations:
         """
         Mixin function to show one objects of any model by his id
         """
-
-        # schema inicialization
-        request_schema = self.classSerializer
-        response_schema = self.classSerializer
-
-        # function
         # Search object by id
         obj = get_object_or_404(self.model, id=id)
         # serializes object
@@ -232,9 +217,9 @@ class MixinOperations:
     permission_classes = [permission_post]
 
     @extend_schema(
-        request=None,
+        request=self.classStateSerializer,
         responses={
-            202: None,
+            202: CustomSuccessSerializer,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -243,11 +228,6 @@ class MixinOperations:
         """
         Mixin function to active one objects of any model by his id
         """
-        # schema inicialization
-        request_schema = self.classStateSerializer
-        response_schema = self.classStateSerializer
-
-        # function
         obj = get_object_or_404(self.model, id=id)
         if not obj.is_active:
             # activating deleted user
@@ -276,9 +256,9 @@ class MixinOperations:
     permission_classes = [permission_put]
 
     @extend_schema(
-        request=None,
+        request=self.classSerializer,
         responses={
-            202: None,
+            202: self.classSerializer,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -295,12 +275,6 @@ class MixinOperations:
         """
         Mixin function to edit one objects of any model by his id
         """
-
-        # schema inicialization
-        request_schema = self.classSerializer
-        response_schema = self.classSerializer
-
-        # function
         # Search object by id
         obj = get_object_or_404(self.model, id=id)
 
@@ -323,9 +297,9 @@ class MixinOperations:
     permission_classes = [permission_delete]
 
     @extend_schema(
-        request=None,
+        request=self.classStateSerializer,
         responses={
-            202: None,
+            202: self.classStateSerializer,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -334,12 +308,6 @@ class MixinOperations:
         """
         Mixin function to delete one objects of any model by his id
         """
-
-        # schema inicialization
-        request_schema = self.classStateSerializer
-        response_schema = self.classStateSerializer
-
-        # function
         # Search object by id
         obj = get_object_or_404(self.model, id=id)
         if obj.is_active:
