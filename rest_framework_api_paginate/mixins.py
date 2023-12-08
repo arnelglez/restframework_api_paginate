@@ -60,7 +60,7 @@ class MixinsList:
 
     permission_classes = [permission_get]
 
-    @common_get_many_schema(modelClass=model)
+    @common_get_many_schema(serializer=classSerializer)
     def get(self, request, *args, **kwargs):
         """
         Mixin function to list every objects of any model

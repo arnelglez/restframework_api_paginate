@@ -11,7 +11,7 @@ from .serializers import (
 
 
 def common_get_many_schema(*args, **kwargs):
-    classSerializer = custom_serializer(kwargs.pop("modelClass"))
+    classSerializer = kwargs.pop("serializer")
     common_kwargs = {
         "parameters": [
             OpenApiParameter(
