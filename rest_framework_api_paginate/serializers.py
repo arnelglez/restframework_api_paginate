@@ -12,16 +12,17 @@ def custom_serializer(modelClass):
     return CustomSerializer
 
 
-def custom_serializer_image(modelClass, image_field_name):
-    if image_field_name:
-        vars()[image_field_name] = CustomImageField(required=False, allow_null=True)
+def custom_image_serializer(modelClass, image_field_name):
+    class CustomImageSerializer(serializers.ModelSerializer):
+        if image_field_name:
+            vars()[image_field_name] = CustomImageField(required=False, allow_null=True)
 
         class Meta:
             model = modelClass
             fields = "__all__"
             read_only_fields = ["id", "is_active", "created_at", "updated_at"]
 
-    return CustomSerializer
+    return CustomImageSerializer
 
 
 def state_serializer(modelClass):
