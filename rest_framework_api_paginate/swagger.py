@@ -55,14 +55,14 @@ def common_post_list_schema(*args, **kwargs):
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
-        "parameters": [
-            OpenApiParameter(
-                name="Authorization",
-                location=OpenApiParameter.HEADER,
-                description="Token used for authentication",
-                type=OpenApiTypes.STR,
-            )
-        ],
+        # "parameters": [
+        #     OpenApiParameter(
+        #         name="Authorization",
+        #         location=OpenApiParameter.HEADER,
+        #         description="Token used for authentication",
+        #         type=OpenApiTypes.STR,
+        #     )
+        # ],
     }
     common_kwargs.update(kwargs)
     return extend_schema(*args, **common_kwargs)
@@ -105,14 +105,14 @@ def common_put_operation_schema(*args, **kwargs):
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
-        "parameters": [
-            OpenApiParameter(
-                name="Authorization",
-                location=OpenApiParameter.HEADER,
-                description="Token used for authentication",
-                type=OpenApiTypes.STR,
-            )
-        ],
+        # "parameters": [
+        #     OpenApiParameter(
+        #         name="Authorization",
+        #         location=OpenApiParameter.HEADER,
+        #         description="Token used for authentication",
+        #         type=OpenApiTypes.STR,
+        #     )
+        # ],
     }
     common_kwargs.update(kwargs)
     return extend_schema(*args, **common_kwargs)
