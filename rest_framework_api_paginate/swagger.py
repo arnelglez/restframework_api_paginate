@@ -83,7 +83,7 @@ def common_get_operation_schema(*args, **kwargs):
 
 
 def common_state_operation_schema(*args, **kwargs):
-    classStateSerializer = kwargs.pop("classSerializer", None)
+    classStateSerializer = kwargs.pop("classStateSerializer", None)
     common_kwargs = {
         "request": classStateSerializer,
         "responses": {
