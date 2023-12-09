@@ -3,13 +3,21 @@ from drf_extra_fields.fields import Base64ImageField
 
 
 def custom_serializer(modelClass):
-    class CustomSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = modelClass
-            fields = "__all__"
-            read_only_fields = ["id", "is_active", "created_at", "updated_at"]
+    class_name = f"{modelClass.__name__}Serializer"
 
-    return CustomSerializer
+    # Define the Meta class with model and fields information, including read_only_fields
+    MetaClass = type(
+        "Meta",
+        (),
+        {
+            "model": modelClass,
+            "fields": "__all__",
+            "read_only_fields": ["id", "is_active", "created_at", "updated_at"],
+        },
+    )
+
+    # Create and return the serializer class
+    return type(class_name, (serializers.ModelSerializer,), {"Meta": MetaClass})
 
 
 def custom_image_serializer(modelClass, image_field_name):
