@@ -37,6 +37,12 @@ def state_serializer(modelClass):
     return StateSerializer
 
 
+class PageParameterSerializer(serializers.Serializer):
+    page = serializers.IntegerField(required=False)
+    page_size = serializers.IntegerField(required=False)
+    active = serializers.BooleanField(required=False)
+
+
 class CustomErrorSerializer(serializers.Serializer):
     detail = serializers.CharField()
 
