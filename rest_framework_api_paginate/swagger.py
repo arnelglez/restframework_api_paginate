@@ -10,10 +10,11 @@ from .serializers import (
 )
 
 
-def common_get_list_schema(classSerializer):
-    def decorator(func):
-        @extend_schema(
-            parameters=[
+def common_get_list_schema(*args, **kwargs):
+    classSerializer = kwargs.pop("classSerializer", None)
+    common_kwargs = {
+        "parameters": (
+            [
                 OpenApiParameter(
                     name="page", description="Page number", required=False, type=int
                 ),
@@ -30,106 +31,88 @@ def common_get_list_schema(classSerializer):
                     type=bool,
                 ),
             ],
-            responses={
+        ),
+        "responses": (
+            {
                 200: CustomResponseSerializer(
                     result_serializer=classSerializer(many=True)
                 ),
                 400: CustomErrorSerializer,
                 404: CustomErrorSerializer,
             },
-        )
-        def wrapper(*args, **kwargs):
-            return func(*args, **kwargs)
-
-        return wrapper
-
-    return decorator
+        ),
+    }
+    common_kwargs.update(kwargs)
+    return extend_schema(*args, **common_kwargs)
 
 
-def common_post_list_schema(classSerializer):
-    def decorator(func):
-        @extend_schema(
-            request=classSerializer,
-            responses={
-                201: classSerializer,
-                400: CustomErrorSerializer,
-                404: CustomErrorSerializer,
-            },
-            parameters=[
-                OpenApiParameter(
-                    name="Authorization",
-                    location=OpenApiParameter.HEADER,
-                    description="Token used for authentication",
-                    type=OpenApiTypes.STR,
-                )
-            ],
-        )
-        def wrapper(*args, **kwargs):
-            return func(*args, **kwargs)
-
-        return wrapper
-
-    return decorator
+def common_post_list_schema(*args, **kwargs):
+    classSerializer = kwargs.pop("classSerializer", None)
+    common_kwargs = {
+        "request": classSerializer,
+        "responses": {
+            201: classSerializer,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+        "parameters": [
+            OpenApiParameter(
+                name="Authorization",
+                location=OpenApiParameter.HEADER,
+                description="Token used for authentication",
+                type=OpenApiTypes.STR,
+            )
+        ],
+    }
+    common_kwargs.update(kwargs)
+    return extend_schema(*args, **common_kwargs)
 
 
-def common_get_operation_schema(classSerializer):
-    def decorator(func):
-        extend_schema(
-            request=classSerializer,
-            responses={
-                200: classSerializer,
-                400: CustomErrorSerializer,
-                404: CustomErrorSerializer,
-            },
-        )
-
-        def wrapper(*args, **kwargs):
-            return func(*args, **kwargs)
-
-        return wrapper
-
-    return decorator
+def common_get_operation_schema(*args, **kwargs):
+    classSerializer = kwargs.pop("classSerializer", None)
+    common_kwargs = {
+        "request": classSerializer,
+        "responses": {
+            200: classSerializer,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+    }
+    common_kwargs.update(kwargs)
+    return extend_schema(*args, **common_kwargs)
 
 
-def common_state_operation_schema(classStateSerializer):
-    def decorator(func):
-        @extend_schema(
-            request=classStateSerializer,
-            responses={
-                202: classStateSerializer,
-                400: CustomErrorSerializer,
-                404: CustomErrorSerializer,
-            },
-        )
-        def wrapper(*args, **kwargs):
-            return func(*args, **kwargs)
-
-        return wrapper
-
-    return decorator
+def common_state_operation_schema(*args, **kwargs):
+    classStateSerializer = kwargs.pop("classSerializer", None)
+    common_kwargs = {
+        "request": classStateSerializer,
+        "responses": {
+            202: classStateSerializer,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+    }
+    common_kwargs.update(kwargs)
+    return extend_schema(*args, **common_kwargs)
 
 
-def common_put_operation_schema(classSerializer):
-    def decorator(func):
-        @extend_schema(
-            request=classSerializer,
-            responses={
-                202: classSerializer,
-                400: CustomErrorSerializer,
-                404: CustomErrorSerializer,
-            },
-            parameters=[
-                OpenApiParameter(
-                    name="Authorization",
-                    location=OpenApiParameter.HEADER,
-                    description="Token used for authentication",
-                    type=OpenApiTypes.STR,
-                )
-            ],
-        )
-        def wrapper(*args, **kwargs):
-            return func(*args, **kwargs)
-
-        return wrapper
-
-    return decorator
+def common_put_operation_schema(*args, **kwargs):
+    classSerializer = kwargs.pop("classSerializer", None)
+    common_kwargs = {
+        "request": classSerializer,
+        "responses": {
+            202: classSerializer,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
+        "parameters": [
+            OpenApiParameter(
+                name="Authorization",
+                location=OpenApiParameter.HEADER,
+                description="Token used for authentication",
+                type=OpenApiTypes.STR,
+            )
+        ],
+    }
+    common_kwargs.update(kwargs)
+    return extend_schema(*args, **common_kwargs)
