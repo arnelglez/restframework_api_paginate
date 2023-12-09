@@ -13,7 +13,7 @@ from .serializers import (
 def common_get_list_schema(*args, **kwargs):
     classSerializer = kwargs.pop("classSerializer", None)
     common_kwargs = {
-        parameters: (
+        "parameters": (
             [
                 OpenApiParameter(
                     name="page", description="Page number", required=False, type=int
@@ -32,7 +32,7 @@ def common_get_list_schema(*args, **kwargs):
                 ),
             ],
         ),
-        responses: (
+        "responses": (
             {
                 200: CustomResponseSerializer(
                     result_serializer=classSerializer(many=True)
@@ -42,20 +42,20 @@ def common_get_list_schema(*args, **kwargs):
             },
         ),
     }
-    common_kwargs.update(kwargs)
+    # common_kwargs.update(kwargs)
     return extend_schema(*args, **common_kwargs)
 
 
 def common_post_list_schema(*args, **kwargs):
     classSerializer = kwargs.pop("classSerializer", None)
     common_kwargs = {
-        request: classSerializer,
-        responses: {
+        "request": classSerializer,
+        "responses": {
             201: classSerializer,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
-        parameters: [
+        "parameters": [
             OpenApiParameter(
                 name="Authorization",
                 location=OpenApiParameter.HEADER,
@@ -64,48 +64,48 @@ def common_post_list_schema(*args, **kwargs):
             )
         ],
     }
-    common_kwargs.update(kwargs)
+    # common_kwargs.update(kwargs)
     return extend_schema(*args, **common_kwargs)
 
 
 def common_get_operation_schema(*args, **kwargs):
     classSerializer = kwargs.pop("classSerializer", None)
     common_kwargs = {
-        request: classSerializer,
-        responses: {
+        "request": classSerializer,
+        "responses": {
             200: classSerializer,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
     }
-    common_kwargs.update(kwargs)
+    # common_kwargs.update(kwargs)
     return extend_schema(*args, **common_kwargs)
 
 
 def common_state_operation_schema(*args, **kwargs):
     classStateSerializer = kwargs.pop("classStateSerializer", None)
     common_kwargs = {
-        request: classStateSerializer,
-        responses: {
+        "request": classStateSerializer,
+        "responses": {
             202: classStateSerializer,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
     }
-    common_kwargs.update(kwargs)
+    # common_kwargs.update(kwargs)
     return extend_schema(*args, **common_kwargs)
 
 
 def common_put_operation_schema(*args, **kwargs):
     classSerializer = kwargs.pop("classSerializer", None)
     common_kwargs = {
-        request: classSerializer,
-        responses: {
+        "request": classSerializer,
+        "responses": {
             202: classSerializer,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
-        parameters: [
+        "parameters": [
             OpenApiParameter(
                 name="Authorization",
                 location=OpenApiParameter.HEADER,
@@ -114,5 +114,5 @@ def common_put_operation_schema(*args, **kwargs):
             )
         ],
     }
-    common_kwargs.update(kwargs)
+    # common_kwargs.update(kwargs)
     return extend_schema(*args, **common_kwargs)
