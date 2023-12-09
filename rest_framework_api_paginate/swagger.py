@@ -11,43 +11,37 @@ from .serializers import (
 
 
 def common_get_list_schema(*args, **kwargs):
-    classSerializer = kwargs.pop("classSerializer", None)
+    classSerializer = kwargs.pop("serializer")
     common_kwargs = {
-        "parameters": (
-            [
-                OpenApiParameter(
-                    name="page", description="Page number", required=False, type=int
-                ),
-                OpenApiParameter(
-                    name="page_size",
-                    description="Items per page",
-                    required=False,
-                    type=int,
-                ),
-                OpenApiParameter(
-                    name="active",
-                    description="Filter by active",
-                    required=False,
-                    type=bool,
-                ),
-            ],
-        ),
-        "responses": (
-            {
-                200: CustomResponseSerializer(
-                    result_serializer=classSerializer(many=True)
-                ),
-                400: CustomErrorSerializer,
-                404: CustomErrorSerializer,
-            },
-        ),
+        "parameters": [
+            OpenApiParameter(
+                name="page", description="Page number", required=False, type=int
+            ),
+            OpenApiParameter(
+                name="page_size",
+                description="Items per page",
+                required=False,
+                type=int,
+            ),
+            OpenApiParameter(
+                name="active",
+                description="Filter by active",
+                required=False,
+                type=bool,
+            ),
+        ],
+        "responses": {
+            200: CustomResponseSerializer(result_serializer=classSerializer(many=True)),
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
     }
-    # common_kwargs.update(kwargs)
+    common_kwargs.update(kwargs)
     return extend_schema(*args, **common_kwargs)
 
 
 def common_post_list_schema(*args, **kwargs):
-    classSerializer = kwargs.pop("classSerializer", None)
+    classSerializer = kwargs.pop("serializer")
     common_kwargs = {
         "request": classSerializer,
         "responses": {
@@ -64,12 +58,12 @@ def common_post_list_schema(*args, **kwargs):
             )
         ],
     }
-    # common_kwargs.update(kwargs)
+    common_kwargs.update(kwargs)
     return extend_schema(*args, **common_kwargs)
 
 
 def common_get_operation_schema(*args, **kwargs):
-    classSerializer = kwargs.pop("classSerializer", None)
+    classSerializer = kwargs.pop("serializer")
     common_kwargs = {
         "request": classSerializer,
         "responses": {
@@ -78,12 +72,12 @@ def common_get_operation_schema(*args, **kwargs):
             404: CustomErrorSerializer,
         },
     }
-    # common_kwargs.update(kwargs)
+    common_kwargs.update(kwargs)
     return extend_schema(*args, **common_kwargs)
 
 
 def common_state_operation_schema(*args, **kwargs):
-    classStateSerializer = kwargs.pop("classStateSerializer", None)
+    classStateSerializer = kwargs.pop("serializer")
     common_kwargs = {
         "request": classStateSerializer,
         "responses": {
@@ -92,12 +86,12 @@ def common_state_operation_schema(*args, **kwargs):
             404: CustomErrorSerializer,
         },
     }
-    # common_kwargs.update(kwargs)
+    common_kwargs.update(kwargs)
     return extend_schema(*args, **common_kwargs)
 
 
 def common_put_operation_schema(*args, **kwargs):
-    classSerializer = kwargs.pop("classSerializer", None)
+    classSerializer = kwargs.pop("serializer", None)
     common_kwargs = {
         "request": classSerializer,
         "responses": {
@@ -114,5 +108,5 @@ def common_put_operation_schema(*args, **kwargs):
             )
         ],
     }
-    # common_kwargs.update(kwargs)
+    common_kwargs.update(kwargs)
     return extend_schema(*args, **common_kwargs)
