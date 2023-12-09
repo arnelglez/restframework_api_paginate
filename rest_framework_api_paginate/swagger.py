@@ -10,32 +10,37 @@ from .serializers import (
 )
 
 
-def common_get_many_schema(*args, **kwargs):
-    classSerializer = custom_serializer(kwargs.get("model"))
-    common_kwargs = {
-        "parameters": [
-            OpenApiParameter(
-                name="page", description="Page number", required=False, type=int
-            ),
-            OpenApiParameter(
-                name="page_size",
-                description="Items per page",
-                required=False,
-                type=int,
-            ),
-            OpenApiParameter(
-                name="active",
-                description="Filter by active",
-                required=False,
-                type=bool,
-            ),
-        ],
-        "responses": {
-            200: CustomResponseSerializer(result_serializer=classSerializer(many=True)),
-            400: CustomErrorSerializer,
-            404: CustomErrorSerializer,
-        },
-        # Any other common parameters
-    }
-    common_kwargs.update(kwargs)
-    return extend_schema(*args, **common_kwargs)
+def common_get_many_schema(classSerializer):
+    def decorator(func):
+        @extend_schema(
+            parameters=[
+                OpenApiParameter(
+                    name="page", description="Page number", required=False, type=int
+                ),
+                OpenApiParameter(
+                    name="page_size",
+                    description="Items per page",
+                    required=False,
+                    type=int,
+                ),
+                OpenApiParameter(
+                    name="active",
+                    description="Filter by active",
+                    required=False,
+                    type=bool,
+                ),
+            ],
+            responses={
+                200: CustomResponseSerializer(
+                    result_serializer=classSerializer(many=True)
+                ),
+                400: CustomErrorSerializer,
+                404: CustomErrorSerializer,
+            },
+        )
+        def wrapper(*args, **kwargs):
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
