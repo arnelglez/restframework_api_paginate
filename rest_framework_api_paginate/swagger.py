@@ -13,25 +13,25 @@ from .serializers import (
 def common_get_list_schema(*args, **kwargs):
     classSerializer = kwargs.pop("classSerializer", None)
     common_kwargs = {
-        "parameters": (
-            [
-                OpenApiParameter(
-                    name="page", description="Page number", required=False, type=int
-                ),
-                OpenApiParameter(
-                    name="page_size",
-                    description="Items per page",
-                    required=False,
-                    type=int,
-                ),
-                OpenApiParameter(
-                    name="active",
-                    description="Filter by active",
-                    required=False,
-                    type=bool,
-                ),
-            ],
-        ),
+        # "parameters": (
+        #     [
+        #         OpenApiParameter(
+        #             name="page", description="Page number", required=False, type=int
+        #         ),
+        #         OpenApiParameter(
+        #             name="page_size",
+        #             description="Items per page",
+        #             required=False,
+        #             type=int,
+        #         ),
+        #         OpenApiParameter(
+        #             name="active",
+        #             description="Filter by active",
+        #             required=False,
+        #             type=bool,
+        #         ),
+        #     ],
+        # ),
         "responses": (
             {
                 200: CustomResponseSerializer(
