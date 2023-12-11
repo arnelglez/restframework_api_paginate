@@ -58,7 +58,10 @@ class MixinsList:
 
     def get(self, request, *args, **kwargs):
         """
-        Mixin function to list every objects of any model
+        List all objects of model
+        page_size: number of objects per page (default: 25)
+        page: number of page (default: no apply pagination)
+        active: filter by active status (default: no apply filter, true: active, false: inactive)
         """
 
         active = request.query_params.get("active", None)
@@ -86,7 +89,7 @@ class MixinsList:
 
     def post(self, request):
         """
-        Mixin function to create object of any model
+        Create a new object of model
         """
         # serializes data entry
         objSerializer = self.classSerializer(data=request.data)
@@ -115,7 +118,7 @@ class MixinOperations:
 
     def get(self, request, id):
         """
-        Mixin function to show one objects of any model by his id
+        Show one objects of any model by his id
         """
         # Search object by id
         obj = get_object_or_404(self.model, id=id)
@@ -128,7 +131,7 @@ class MixinOperations:
 
     def post(self, request, id):
         """
-        Mixin function to active one objects of any model by his id
+        Active one object of model by his id
         """
         obj = get_object_or_404(self.model, id=id)
         if not obj.is_active:
@@ -159,7 +162,7 @@ class MixinOperations:
 
     def put(self, request, id):
         """
-        Mixin function to edit one objects of any model by his id
+        Edit one objects of model by his id
         """
         # Search object by id
         obj = get_object_or_404(self.model, id=id)
@@ -184,7 +187,8 @@ class MixinOperations:
 
     def delete(self, request, id):
         """
-        Mixin function to delete one objects of any model by his id
+        Delete one objects of model by his id
+        realy never delete, only change status to inactive
         """
         # Search object by id
         obj = get_object_or_404(self.model, id=id)
