@@ -58,10 +58,10 @@ class MixinsList:
 
     def get(self, request, *args, **kwargs):
         """
-        List all objects of model
-        page_size: number of objects per page (default: 25)
-        page: number of page (default: no apply pagination)
-        active: filter by active status (default: no apply filter, true: active, false: inactive)
+        List all objects of model \n
+        page_size: number of objects per page (default: 25) \n
+        page: number of page (default: no apply pagination) \n
+        active: filter by active status (default: no apply filter, true: active, false: inactive) \n
         """
 
         active = request.query_params.get("active", None)
@@ -187,7 +187,7 @@ class MixinOperations:
 
     def delete(self, request, id):
         """
-        Delete one objects of model by his id
+        Delete one objects of model by his id \n
         realy never delete, only change status to inactive
         """
         # Search object by id
