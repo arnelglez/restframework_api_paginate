@@ -4,11 +4,26 @@ from django.forms import ValidationError
 
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
-from django.views.decorators.cache import cache_page
+from django.core.views import cache
 
 from django.db import models
 
 from django.utils.translation import gettext_lazy as _
+
+
+class CacheMixin:
+    cache_timeout = 60 * 30
+
+    def get_cache_key(self, request, *args, **kwargs):
+        return f"{request.path}-{request.user.id}"
+
+    def get(self, request, *args, **kwargs):
+        cache_key = self.get_cache_key(request, *args, **kwargs)
+        response = cache.get(cache_key)
+        if response is None:
+            response = super().get(request, *args, **kwargs)
+            cache.set(cache_key, response, self.cache_timeout)
+        return response
 
 
 class CustomPagination(PageNumberPagination):
@@ -48,7 +63,7 @@ class CustomPagination(PageNumberPagination):
         )
 
 
-class MixinsList:
+class MixinsList(CacheMixin):
     model = None
     classSerializer = None
     permission_get = None
@@ -109,7 +124,7 @@ class MixinsList:
         )
 
 
-class MixinOperations:
+class MixinOperations(CacheMixin):
     model = None
     classSerializer = None
     classStateSerializer = None
