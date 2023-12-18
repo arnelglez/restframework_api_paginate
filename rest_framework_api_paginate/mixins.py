@@ -4,7 +4,7 @@ from django.forms import ValidationError
 
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
-from django.core.views import cache
+from django.core.cache import cache
 
 from django.db import models
 
