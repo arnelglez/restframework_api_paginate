@@ -72,7 +72,6 @@ class MixinsList(CacheMixin):
 
     permission_classes = [permission_get]
 
-    @cache_page(60 * 60 * 2)
     def get(self, request, *args, **kwargs):
         """
         List all objects of model \n
