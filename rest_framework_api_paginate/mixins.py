@@ -4,6 +4,7 @@ from django.forms import ValidationError
 
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
+from django.views.decorators.cache import cache_page
 
 from django.db import models
 
@@ -56,6 +57,7 @@ class MixinsList:
 
     permission_classes = [permission_get]
 
+    @cache_page(60 * 60 * 2)
     def get(self, request, *args, **kwargs):
         """
         List all objects of model \n
