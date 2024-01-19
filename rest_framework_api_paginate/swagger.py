@@ -76,12 +76,12 @@ def common_get_operation_schema(*args, **kwargs):
     return extend_schema(*args, **common_kwargs)
 
 
-def common_state_operation_schema(*args, **kwargs):
-    classStateSerializer = kwargs.pop("serializer")
+def common_post_operation_schema(*args, **kwargs):
+    classSerializer = kwargs.pop("serializer")
     common_kwargs = {
-        "request": classStateSerializer,
+        "request": classSerializer,
         "responses": {
-            202: classStateSerializer,
+            200: classSerializer,
             400: CustomErrorSerializer,
             404: CustomErrorSerializer,
         },
@@ -107,6 +107,20 @@ def common_put_operation_schema(*args, **kwargs):
                 type=OpenApiTypes.STR,
             )
         ],
+    }
+    common_kwargs.update(kwargs)
+    return extend_schema(*args, **common_kwargs)
+
+
+def common_delete_operation_schema(*args, **kwargs):
+    classSerializer = kwargs.pop("serializer")
+    common_kwargs = {
+        "request": classSerializer,
+        "responses": {
+            202: classSerializer,
+            400: CustomErrorSerializer,
+            404: CustomErrorSerializer,
+        },
     }
     common_kwargs.update(kwargs)
     return extend_schema(*args, **common_kwargs)

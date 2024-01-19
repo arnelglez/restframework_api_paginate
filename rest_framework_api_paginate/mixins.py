@@ -126,7 +126,6 @@ class MixinsList(CacheMixin):
 class MixinOperations(CacheMixin):
     model = None
     classSerializer = None
-    classStateSerializer = None
     permission_get = None
     permission_post = None
     permission_put = None
@@ -151,23 +150,14 @@ class MixinOperations(CacheMixin):
         """
         obj = get_object_or_404(self.model, id=id)
         if not obj.is_active:
-            # activating deleted user
-            objActive = {"is_active": 1}
             # serializes data entry
-            serializer = self.classStateSerializer(obj, data=objActive)
-            # verify if entry is valid
-            if serializer.is_valid():
-                # save entry
-                serializer.save()
-                # show blank object (deleted)
-                return JsonResponse(
-                    serializer.data, safe=False, status=status.HTTP_202_ACCEPTED
-                )
-            # show errors because not save
-            return JsonResponse(
-                serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST
-            )
-            # show errors because user is inactive
+            obj.is_active = True
+            # save entry
+            obj.save()
+            # show blank object (deleted)
+            serializer = self.classSerializer(obj)
+            return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+        # show errors because user is inactive
         return JsonResponse(
             {"detail": _(f"This {self.model.__name__} is active")},
             safe=False,
@@ -210,20 +200,12 @@ class MixinOperations(CacheMixin):
         obj = get_object_or_404(self.model, id=id)
         if obj.is_active:
             # user can be deleted only status inactive
-            objDelete = {"is_active": 0}
-            # serializes data entry
-            serializer = self.classStateSerializer(obj, data=objDelete)
-            # verify if entry is valid
-            if serializer.is_valid():
-                # save entry
-                serializer.save()
-                # show blank object (deleted)
-                return JsonResponse(
-                    serializer.data, safe=False, status=status.HTTP_202_ACCEPTED
-                )
-            # show errors because not save
+            obj.is_active = False
+            obj.save()
+            serializer = self.classSerializer(obj)
+            # show blank object (deleted)
             return JsonResponse(
-                serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST
+                serializer.data, safe=False, status=status.HTTP_202_ACCEPTED
             )
             # show errors because user is inactive
         return JsonResponse(
