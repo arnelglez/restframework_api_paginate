@@ -42,8 +42,6 @@ class CustomPagination(PageNumberPagination):
             # Otherwise, try to get the page_size from the request
             # or use the default if it's not provided
             try:
-                print("page_number", page_number)
-                print("page_size", self.page_size)
                 self.page_size = int(
                     request.query_params.get(self.page_size_query_param, self.page_size)
                 )
