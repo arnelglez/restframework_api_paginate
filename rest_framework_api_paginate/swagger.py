@@ -5,8 +5,6 @@ from .serializers import (
     CustomErrorSerializer,
     CustomSuccessSerializer,
     CustomResponseSerializer,
-    custom_serializer,
-    state_serializer,
 )
 
 

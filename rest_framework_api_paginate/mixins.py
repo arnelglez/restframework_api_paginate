@@ -35,13 +35,15 @@ class CustomPagination(PageNumberPagination):
         # Check if a page number is provided in the request
         page_number = request.query_params.get(self.page_query_param)
 
-        if page_number is not None:
+        if page_number is None:
             # If no page number is provided, set the page_size to the total count
             self.page_size = queryset.count()
         else:
             # Otherwise, try to get the page_size from the request
             # or use the default if it's not provided
             try:
+                print("page_number", page_number)
+                print("page_size", self.page_size)
                 self.page_size = int(
                     request.query_params.get(self.page_size_query_param, self.page_size)
                 )
