@@ -34,19 +34,12 @@ class CustomPagination(PageNumberPagination):
     def paginate_queryset(self, queryset, request, view=None):
         # Check if a page number is provided in the request
         page_number = request.query_params.get(self.page_query_param)
-
-        if page_number is None:
-            # If no page number is provided, set the page_size to the total count
-            self.page_size = queryset.count()
-        else:
-            # Otherwise, try to get the page_size from the request
-            # or use the default if it's not provided
-            try:
-                self.page_size = int(
-                    request.query_params.get(self.page_size_query_param, self.page_size)
-                )
-            except (TypeError, ValueError):
-                self.page_size = self.get_default_page_size()
+        try:
+            self.page_size = int(
+                request.query_params.get(self.page_size_query_param, self.page_size)
+            )
+        except (TypeError, ValueError):
+            self.page_size = self.get_default_page_size()
 
         return super().paginate_queryset(queryset, request, view)
 
