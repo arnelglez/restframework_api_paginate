@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.forms import ValidationError
+from django.db.models import Q
 
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
@@ -69,17 +70,27 @@ class MixinsList(CacheMixin):
         """
         List all objects of model \n
         page_size: number of objects per page (default: 25) \n
-        page: number of page (default: no apply pagination) \n
         active: filter by active status (default: no apply filter, true: active, false: inactive) \n
         """
 
         active = request.query_params.get("active", None)
+        query = request.query_params.get("query", "")
+
+        exclude_fields = {"id", "is_active", "created_at", "updated_at"}
+        query_filter = Q()
+        for field in self.model._meta.fields:
+            if field.name not in exclude_fields:
+                query_filter |= Q(**{f"{field.name}__icontains": query})
 
         if active is not None:
             active = True if active.lower() == "true" else False
-            objects = self.model.objects.filter(is_active=bool(active)).order_by("id")
+            objects = (
+                self.model.objects.filter(is_active=bool(active))
+                .filter(query_filter)
+                .order_by("id")
+            )
         else:
-            objects = self.model.objects.all().order_by("id")
+            objects = self.model.objects.filter(query_filter).order_by("id")
 
         total_count = objects.count()
         paginator = CustomPagination()

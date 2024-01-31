@@ -16,6 +16,9 @@ def common_get_list_schema(*args, **kwargs):
                 name="page", description="Page number", required=False, type=int
             ),
             OpenApiParameter(
+                name="query", description="Search word", required=False, type=str
+            ),
+            OpenApiParameter(
                 name="page_size",
                 description="Items per page",
                 required=False,
