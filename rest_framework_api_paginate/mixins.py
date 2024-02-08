@@ -75,6 +75,9 @@ class MixinsList(CacheMixin):
 
         active = request.query_params.get("active", None)
         query = request.query_params.get("query", "")
+        order = request.query_params.get("order", "created_at")
+        if order not in [field.name for field in self.model._meta.fields]:
+            order = "created_at"
 
         exclude_fields = {"id", "is_active", "created_at", "updated_at"}
         query_filter = Q()
@@ -87,10 +90,10 @@ class MixinsList(CacheMixin):
             objects = (
                 self.model.objects.filter(is_active=bool(active))
                 .filter(query_filter)
-                .order_by("id")
+                .order_by(order)
             )
         else:
-            objects = self.model.objects.filter(query_filter).order_by("id")
+            objects = self.model.objects.filter(query_filter).order_by(order)
 
         total_count = objects.count()
         paginator = CustomPagination()

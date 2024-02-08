@@ -19,6 +19,9 @@ def common_get_list_schema(*args, **kwargs):
                 name="query", description="Search word", required=False, type=str
             ),
             OpenApiParameter(
+                name="order", description="Order by Column", required=False, type=str
+            ),
+            OpenApiParameter(
                 name="page_size",
                 description="Items per page",
                 required=False,
