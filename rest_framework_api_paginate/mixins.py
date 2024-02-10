@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.forms import ValidationError
-from django.db.models import Q
+from django.db.models import Q, ForeignKey
 
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
@@ -79,7 +79,11 @@ class MixinsList(CacheMixin):
         if order not in [field.name for field in self.model._meta.fields]:
             order = "created_at"
 
-        exclude_fields = {"id", "is_active", "created_at", "updated_at"}
+        exclude_fields = ["id", "is_active", "created_at", "updated_at"]
+        for field in self.model._meta.get_fields():
+            if isinstance(field, ForeignKey):
+                exclude_fields.append(field.name)
+
         query_filter = Q()
         for field in self.model._meta.fields:
             if field.name not in exclude_fields:
